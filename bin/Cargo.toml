@@ -1,0 +1,18 @@
+[package]
+name = "bin"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+# 引用工作空间中的 core 模块
+core = { path = "../core" }
+open_api = { path = "../open_api" }
+
+# 引用工作空间中的其他依赖
+tokio = { workspace = true, features = ["full"] }
+salvo = { workspace = true, features = ["full", "session", "oapi", "logging", "static", "request-id", "anyhow"] }
+anyhow = { workspace = true }
+tracing = { workspace = true }
+tracing-subscriber = { workspace = true }
+
+# Add other workspace dependencies as needed 

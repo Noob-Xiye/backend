@@ -1,0 +1,16 @@
+[package]
+name = "merchant"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+core = { path = "../core" }
+payment = { path = "../payment" }
+# Add other workspace dependencies as needed
+salvo = { workspace = true, features = ["session", "oapi", "logging", "static", "request-id", "anyhow"] }
+anyhow = { workspace = true }
+sea-orm = { workspace = true, features = ["postgres", "macros"] }
+redis = { workspace = true, features = ["tokio-comp"] }
+chrono = { workspace = true, features = ["serde"] }
+snowflake = { workspace = true }
+bcrypt = { workspace = true } 

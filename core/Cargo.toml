@@ -1,0 +1,25 @@
+[package]
+name = "core"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+# Add core dependencies here
+sea-orm = { workspace = true }
+tokio = { workspace = true }
+config = { workspace = true }
+tracing = { workspace = true }
+thiserror = { workspace = true }
+bcrypt = { workspace = true }
+salvo = { workspace = true, features = ["session", "oapi", "logging", "static", "request-id", "anyhow"] }
+anyhow = { workspace = true }
+rand = { workspace = true }
+
+# core 模块的依赖引用工作空间依赖
+redis = { workspace = true, features = ["tokio-comp"] }
+tracing-subscriber = { workspace = true }
+async-trait = { workspace = true }
+futures = { workspace = true }
+chrono = { workspace = true, features = ["serde"] }
+lettre = { workspace = true, features = ["tokio1", "tokio1-native-tls"] }
+snowflake = { workspace = true } 

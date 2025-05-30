@@ -1,0 +1,15 @@
+[package]
+name = "customer"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+core = { path = "../core" }
+# Add other workspace dependencies as needed
+salvo = { workspace = true, features = ["session"] }
+anyhow = { workspace = true }
+sea-orm = { workspace = true, features = ["postgres", "macros"] }
+redis = { workspace = true, features = ["tokio-comp"] }
+chrono = { workspace = true, features = ["serde"] }
+snowflake = { workspace = true }
+bcrypt = { workspace = true } 

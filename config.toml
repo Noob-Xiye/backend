@@ -1,0 +1,70 @@
+# 服务器配置
+[server]
+host = "0.0.0.0"
+port = 8080
+workers = 4
+keep_alive = 60
+max_connections = 10000
+tcp_nodelay = true
+tcp_keepalive = 300
+
+
+# 数据库配置
+[database]
+url = "postgres://user:password@localhost:5432/database"
+max_connections = 100
+min_connections = 5
+connect_timeout = 10
+idle_timeout = 300
+max_lifetime = 1800
+
+# Redis配置
+[redis]
+url = "redis://localhost:6379"
+password = ""
+db = 0
+pool_size = 100
+timeout = 5
+max_retries = 3
+
+# 会话配置
+[session]
+name = "RSWS_SESSION"
+expires = 86400  # 24小时
+path = "/"
+domain = ""
+secure = true
+http_only = true
+same_site = "Lax"
+
+
+# 监控配置
+[monitoring]
+sentry_dsn = ""
+prometheus_port = 9090
+metrics_path = "/metrics"
+
+# 安全配置
+[security]
+rate_limit = 1000  # 每秒请求数
+trust_proxy = true
+allowed_origins = [
+    "https://www.example.com",
+    "https://admin.example.com"
+]
+allowed_methods = ["GET", "POST", "PUT", "DELETE", "OPTIONS"]
+allowed_headers = ["*"]
+exposed_headers = ["Content-Length", "Content-Type"]
+max_age = 86400
+
+# 缓存配置
+[cache]
+default_ttl = 3600  # 1小时
+max_size = 1000     # 最大缓存条目数
+cleanup_interval = 300  # 5分钟
+
+# 雪花算法配置
+[snowflake]
+worker_id = 1
+datacenter_id = 1
+epoch = 1288834974657  # 2010-11-04 01:42:54.657

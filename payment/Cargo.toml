@@ -1,0 +1,16 @@
+[package]
+name = "payment"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+core = { path = "../core" }
+# Add other necessary dependencies, like anychain and salvo features, if not inherited from workspace
+salvo = { workspace = true, features = ["oapi"] }
+anyhow = { workspace = true }
+async-trait = { workspace = true }
+serde = { workspace = true, features = ["derive"] }
+serde_json = { workspace = true }
+reqwest = { workspace = true, features = ["json"] }
+tokio = { workspace = true, features = ["full"] }
+url = { workspace = true } 

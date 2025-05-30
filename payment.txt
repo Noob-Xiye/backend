@@ -1,0 +1,16 @@
+# 支付宝配置
+[alipay]
+app_id = ""
+private_key = ""
+public_key = ""
+notify_url = "https://api.example.com/api/v1/payment/alipay/notify"
+return_url = "https://www.example.com/payment/result"
+gateway = "https://openapi.alipay.com/gateway.do"
+
+# Cregis配置
+[cregis]
+api_key = ""
+api_secret = ""
+api_url = "https://api.cregis.com"
+merchant_id = ""
+wallet_id = ""

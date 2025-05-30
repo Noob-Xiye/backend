@@ -1,0 +1,13 @@
+[package]
+name = "open-api"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+core = { path = "../core" }
+admin = { path = "../admin" }
+customer = { path = "../customer" }
+merchant = { path = "../merchant" }
+payment = { path = "../payment" }
+salvo = { workspace = true, features = ["oapi"] }
+anyhow = { workspace = true } 

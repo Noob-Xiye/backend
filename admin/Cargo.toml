@@ -1,0 +1,9 @@
+[package]
+name = "admin"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+core = { path = "../core" }
+salvo = { workspace = true, features = ["session", "oapi", "logging", "static", "request-id", "anyhow"] }
+anyhow = { workspace = true } 
