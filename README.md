@@ -233,7 +233,7 @@ Bin 模块作为整个项目的入口点，负责服务器的初始化和启动�
 
 ```bash
 # 克隆项目
-git clone https://github.com/Noob-Xiye/backend
+git clone https://github.com/Noob-Xiye/backend.git
 
 # 安装依赖
 cargo build --workspace
