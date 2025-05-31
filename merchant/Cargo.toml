@@ -7,10 +7,10 @@ edition = "2021"
 core = { path = "../core" }
 payment = { path = "../payment" }
 # Add other workspace dependencies as needed
-salvo = { workspace = true, features = ["session", "oapi", "logging", "static", "request-id", "anyhow"] }
+salvo = { workspace = true, features = ["session", "logging", "request-id", "anyhow"] }
 anyhow = { workspace = true }
-sea-orm = { workspace = true, features = ["postgres", "macros"] }
-redis = { workspace = true, features = ["tokio-comp"] }
+sea-orm = { workspace = true }
+redis = { workspace = true }
 chrono = { workspace = true, features = ["serde"] }
 snowflake = { workspace = true }
 bcrypt = { workspace = true } 

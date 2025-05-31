@@ -10,7 +10,7 @@ open_api = { path = "../open_api" }
 
 # 引用工作空间中的其他依赖
 tokio = { workspace = true, features = ["full"] }
-salvo = { workspace = true, features = ["full", "session", "oapi", "logging", "static", "request-id", "anyhow"] }
+salvo = { workspace = true }
 anyhow = { workspace = true }
 tracing = { workspace = true }
 tracing-subscriber = { workspace = true }

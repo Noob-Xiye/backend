@@ -9,5 +9,5 @@ admin = { path = "../admin" }
 customer = { path = "../customer" }
 merchant = { path = "../merchant" }
 payment = { path = "../payment" }
-salvo = { workspace = true, features = ["oapi"] }
+salvo = { workspace = true, features = ["oapi", "session", "logging", "request-id", "anyhow"] }
 anyhow = { workspace = true } 
