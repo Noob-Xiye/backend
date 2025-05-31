@@ -11,7 +11,7 @@ pub struct Model {
     pub new_merchants_count: i64,
     pub total_orders_count: i64,
     pub total_sales_amount: f64,
-    // Add other relevant report metrics
+    // 添加其他相关的报表指标
     pub created_at: chrono::NaiveDateTime,
 }
 

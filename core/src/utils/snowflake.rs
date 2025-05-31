@@ -1,8 +1,8 @@
 use snowflake::SnowflakeIdGenerator;
 use std::sync::Mutex;
 
-// In a real application, the worker_id and node_id should be configured.
-// For simplicity, we use hardcoded values here.
+// 在实际应用中，worker_id 和 node_id 应该进行配置。
+// 为了简单起见，这里使用硬编码值。
 lazy_static::lazy_static! {
     static ref SNOWFLAKE_ID_GENERATOR: Mutex<SnowflakeIdGenerator> =
         Mutex::new(SnowflakeIdGenerator::new(1, 1));

@@ -22,14 +22,14 @@ pub async fn send_email(
 
     let creds = Credentials::new(smtp_user.to_string(), smtp_password.to_string());
 
-    // Open a remote connection to the SMTP server
+    // 打开与 SMTP 服务器的远程连接
     let mailer = SmtpTransport::relay(smtp_server)
         .unwrap()
         .port(smtp_port)
         .credentials(creds)
         .build();
 
-    // Send the email
+    // 发送电子邮件
     match mailer.send(&email) {
         Ok(_) => Ok(()),
         Err(e) => Err(anyhow::anyhow!("Could not send email: {}", e)),

@@ -9,7 +9,7 @@ impl RedisPool {
     pub async fn new(redis_url: &str) -> Result<Self, RedisError> {
         info!("Connecting to Redis...");
         let client = Client::open(redis_url)?;
-        // You might want to test the connection here, e.g., client.get_connection().await?
+        // 您可以在此处测试连接，例如: client.get_connection().await?
         Ok(Self { client })
     }
 
@@ -18,7 +18,7 @@ impl RedisPool {
     }
 }
 
-// Example usage (optional, for demonstration)
+// 示例用法 (可选，仅用于演示)
 /*
 pub async fn get_value(
     pool: &RedisPool,

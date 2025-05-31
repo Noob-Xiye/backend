@@ -6,7 +6,7 @@ use serde::{Deserialize, Serialize};
 pub struct Model {
     #[sea_orm(primary_key)]
     pub id: i32,
-    pub name: String, // e.g., "admin:user:read", "merchant:product:write"
+    pub name: String, // 例如: "admin:user:read", "merchant:product:write"
     pub description: Option<String>,
 }
 

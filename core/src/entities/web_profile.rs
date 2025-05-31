@@ -14,7 +14,7 @@ pub struct Model {
     pub smtp_user: Option<String>,
     pub smtp_password: Option<String>,
     pub payment_callback_url: Option<String>,
-    // Add other relevant website settings
+    // 添加其他相关的网站设置
 }
 
 #[derive(Copy, Clone, Debug, EnumIter, DeriveRelation)]

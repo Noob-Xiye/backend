@@ -93,18 +93,17 @@ impl AppConfig {
         let run_mode = env::var("RUN_MODE").unwrap_or_else(|_| "development".into());
 
         let s = Config::builder()
-            // Start off by merging in the "default" configuration file
+            // 首先合并“默认”配置文件
             .add_source(File::with_name("config"))
-            // Add in the current environment file
-            // E.g. `development.toml`, `production.toml`
+            // 添加当前环境对应的配置文件
+            // 例如: `development.toml`, `production.toml`
             .add_source(File::with_name(&format!("config/{}", run_mode)).required(false))
-            // Add in settings from environment variables (with a prefix of APP)
-            // E.g. `APP_DEBUG=1 would reference a `debug` key
+            // 添加环境变量中的设置 (以 APP 为前缀)
+            // 例如: `APP_DEBUG=1` 将引用 `debug` 键
             .add_source(config::Environment::with_prefix("APP"))
             .build()?;
 
-        // You can deserialize (and thus freeze) the entire configuration as
-        // your own complex struct.
+        // 您可以将整个配置反序列化 (并因此“冻结”) 到您自己的复杂结构中。
         s.try_deserialize()
     }
 }

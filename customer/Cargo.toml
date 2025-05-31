@@ -5,7 +5,7 @@ edition = "2021"
 
 [dependencies]
 core = { path = "../core" }
-# Add other workspace dependencies as needed
+# 根据需要添加其他工作空间依赖
 salvo = { workspace = true, features = ["session"] }
 anyhow = { workspace = true }
 sea-orm = { workspace = true, features = ["postgres", "macros"] }

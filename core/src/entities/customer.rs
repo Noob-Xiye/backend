@@ -10,7 +10,7 @@ pub struct Model {
     pub password_hash: String,
     pub nickname: String,
     pub avatar_url: Option<String>,
-    pub role: String,   // e.g., "customer"
+    pub role: String,   // 例如: "customer"
     pub status: String, // e.g., "active", "inactive"
     pub last_login_time: Option<chrono::NaiveDateTime>,
     pub last_login_ip: Option<String>,

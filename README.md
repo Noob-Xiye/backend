@@ -138,6 +138,7 @@ Core 模块是系统的核心基础库，提供了其他所有模块所需的公
   - 操作日志表 [logging.rs](./core/src/entities/logging.rs)
   - 日志配置表 [logger_conf.rs](./core/src/entities/logger_conf.rs)
   - 网站信息表 [web_profile.rs](./core/src/entities/web_profile.rs)
+- 请求、响应返回的结构体[model](./core/src/model)以及基于[database.rs](./core/src/utils/database.rs)数据库连接池的数据库操作函数
 - 中间件 [middleware](./core/src/middleware/): 包含了处理请求和响应的通用中间件逻辑，基于 Salvo 实现。
   - 会话管理 [session.rs](./core/src/middleware/session.rs)
   - 日志服务 [logging.rs](./core/src/middleware/logging.rs)

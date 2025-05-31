@@ -5,7 +5,7 @@ edition = "2021"
 
 [dependencies]
 core = { path = "../core" }
-# Add other necessary dependencies, like anychain and salvo features, if not inherited from workspace
+# 添加其他必要的依赖，例如 anychain 和 salvo features，如果未从工作空间继承
 salvo = { workspace = true, features = ["oapi"] }
 anyhow = { workspace = true }
 async-trait = { workspace = true }
