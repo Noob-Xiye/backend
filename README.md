@@ -147,11 +147,12 @@ Core 模块是系统的核心基础库，提供了其他所有模块所需的公
   - CORS配置 [cors.rs](./core/src/middleware/cors.rs)
   - 权限验证 [auth.rs](./core/src/middleware/auth.rs)
 - 工具函数 [utils](./core/src/utils/): 提供各种辅助功能，如数据库/Redis连接池、密码加密、邮件发送、雪花ID生成等。
-  - 数据库连接池 [database.rs](./core/src/utils/database.rs)
-  - Redis连接池 [redis.rs](./core/src/utils/redis.rs)
+  - 数据库连接池 [database.rs](./core/src/utils/database.rs) 供项目内所有需要操作pgsql数据库的函数调用
+  - Redis连接池 [redis.rs](./core/src/utils/redis.rs) 供项目内所有需要操作Redis的函数调用
   - 密码加密 [crypto.rs](./core/src/utils/crypto.rs)
-  - 邮件验证码发送 [email.rs](./core/src/utils/email.rs)
-  - 雪花ID生成 [snowflake.rs](./core/src/utils/snowflake.rs)
+  - 邮件验证码发送 [email.rs](./core/src/utils/email.rs) 供邮箱注册发送验证码调用
+  - 雪花ID生成 [snowflake.rs](./core/src/utils/snowflake.rs) 供所有账号创建函数调用为账号生成雪花id，以及供商品上架函数调用为商品生成雪花id
+  - 统一的响应返回AppResult和错误返回AppError，JSON格式统一为{code: *, msg: "", data: {} }，错误返回代码调用error_list
 - 错误返回代码 [error](./core/src/error/): 定义了系统统一的错误代码及处理逻辑。
   - `error_list.rs` 中存返回的统一错误代码，并对应常量 [error_list.rs](./core/src/error/error_list.rs)。错误代码范围划分：1000-1999 系统错误，2000-2999 数据错误，3000-3999 业务错误等。
 - 配置文件 [settings](./core/src/settings/): 处理配置文件的读取和加载。
