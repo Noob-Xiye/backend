@@ -370,22 +370,28 @@ pub fn anyhow_error(code: u16, message: impl Into<String>) -> anyhow::Error {
 #[derive(Error, Debug)]
 pub enum AppError {
     #[error("System Error: {message} (Code: {code})")]
-    SystemError { code: u16, message: String },
+    SystemError { code: i32, message: String },
 
     #[error("Data Error: {message} (Code: {code})")]
-    DataError { code: u16, message: String },
+    DataError { code: i32, message: String },
 
     #[error("Business Error: {message} (Code: {code})")]
-    BusinessError { code: u16, message: String },
+    BusinessError { code: i32, message: String },
 
     #[error("Authentication Error: {message} (Code: {code})")]
-    AuthError { code: u16, message: String },
+    AuthError { code: i32, message: String },
 
     #[error("Payment Error: {message} (Code: {code})")]
-    PaymentError { code: u16, message: String },
+    PaymentError { code: i32, message: String },
+
+    #[error("File Error: {message} (Code: {code})")]
+    FileError { code: i32, message: String },
+
+    #[error("External Service Error: {message} (Code: {code})")]
+    ExternalServiceError { code: i32, message: String },
 
     #[error("Other Error: {message} (Code: {code})")]
-    OtherError { code: u16, message: String },
+    OtherError { code: i32, message: String },
 
     #[error(transparent)]
     SeaOrmError(#[from] sea_orm::DbErr),
@@ -407,45 +413,213 @@ pub enum AppError {
 
     #[error(transparent)]
     AnyhowError(#[from] anyhow::Error),
-    // Add other necessary error types
 }
 
 impl AppError {
-    pub fn code(&self) -> u16 {
+    pub fn new(code: i32) -> Self {
+        let message = Self::get_message_by_code(code as u16);
+        Self::from_code_and_message(code, message)
+    }
+
+    pub fn from_code_and_message(code: i32, message: String) -> Self {
+        match code as u16 {
+            SYSTEM_ERROR_BASE..=1999 => AppError::SystemError { code, message },
+            DATA_ERROR_BASE..=2999 => AppError::DataError { code, message },
+            BUSINESS_ERROR_BASE..=3999 => AppError::BusinessError { code, message },
+            AUTH_ERROR_BASE..=4999 => AppError::AuthError { code, message },
+            PAYMENT_ERROR_BASE..=5999 => AppError::PaymentError { code, message },
+            FILE_ERROR_BASE..=6999 => AppError::FileError { code, message },
+            EXTERNAL_SERVICE_ERROR_BASE..=7999 => AppError::ExternalServiceError { code, message },
+            _ => AppError::OtherError { code, message },
+        }
+    }
+
+    pub fn get_message_by_code(code: u16) -> String {
+        match code {
+            SYSTEM_INTERNAL_ERROR => SYSTEM_INTERNAL_ERROR_MSG.to_string(),
+            CONFIG_LOAD_ERROR => CONFIG_LOAD_ERROR_MSG.to_string(),
+            DB_CONNECT_ERROR => DB_CONNECT_ERROR_MSG.to_string(),
+            REDIS_CONNECT_ERROR => REDIS_CONNECT_ERROR_MSG.to_string(),
+            SERVER_START_ERROR => SERVER_START_ERROR_MSG.to_string(),
+            MIDDLEWARE_INIT_ERROR => MIDDLEWARE_INIT_ERROR_MSG.to_string(),
+            UTILS_INIT_ERROR => UTILS_INIT_ERROR_MSG.to_string(),
+            SHUTDOWN_ERROR => SHUTDOWN_ERROR_MSG.to_string(),
+            THREAD_POOL_ERROR => THREAD_POOL_ERROR_MSG.to_string(),
+            ROUTE_MATCH_ERROR => ROUTE_MATCH_ERROR_MSG.to_string(),
+            HANDLER_EXECUTION_ERROR => HANDLER_EXECUTION_ERROR_MSG.to_string(),
+            RATE_LIMIT_CONFIG_ERROR => RATE_LIMIT_CONFIG_ERROR_MSG.to_string(),
+            CORS_CONFIG_ERROR => CORS_CONFIG_ERROR_MSG.to_string(),
+            CACHE_INIT_ERROR => CACHE_INIT_ERROR_MSG.to_string(),
+            LOGGING_INIT_ERROR => LOGGING_INIT_ERROR_MSG.to_string(),
+            DB_OPERATION_ERROR => DB_OPERATION_ERROR_MSG.to_string(),
+            RECORD_NOT_FOUND => RECORD_NOT_FOUND_MSG.to_string(),
+            DUPLICATE_ENTRY => DUPLICATE_ENTRY_MSG.to_string(),
+            DATA_VALIDATION_ERROR => DATA_VALIDATION_ERROR_MSG.to_string(),
+            DATA_PARSE_ERROR => DATA_PARSE_ERROR_MSG.to_string(),
+            INVALID_ID_FORMAT => INVALID_ID_FORMAT_MSG.to_string(),
+            DATABASE_MIGRATION_ERROR => DATABASE_MIGRATION_ERROR_MSG.to_string(),
+            REDIS_OPERATION_ERROR => REDIS_OPERATION_ERROR_MSG.to_string(),
+            CACHE_OPERATION_ERROR => CACHE_OPERATION_ERROR_MSG.to_string(),
+            INVALID_DATA_FORMAT => INVALID_DATA_FORMAT_MSG.to_string(),
+            TRANSACTION_COMMIT_FAILED => TRANSACTION_COMMIT_FAILED_MSG.to_string(),
+            TRANSACTION_ROLLBACK_FAILED => TRANSACTION_ROLLBACK_FAILED_MSG.to_string(),
+            INVALID_QUERY_PARAMETER => INVALID_QUERY_PARAMETER_MSG.to_string(),
+            DATA_INCONSISTENCY => DATA_INCONSISTENCY_MSG.to_string(),
+            INVALID_INPUT => INVALID_INPUT_MSG.to_string(),
+            INSUFFICIENT_STOCK => INSUFFICIENT_STOCK_MSG.to_string(),
+            UNSUPPORTED_OPERATION => UNSUPPORTED_OPERATION_MSG.to_string(),
+            BUSINESS_LOGIC_ERROR => BUSINESS_LOGIC_ERROR_MSG.to_string(),
+            ACCOUNT_DISABLED => ACCOUNT_DISABLED_MSG.to_string(),
+            ACCOUNT_LOCKED => ACCOUNT_LOCKED_MSG.to_string(),
+            INVALID_OLD_PASSWORD => INVALID_OLD_PASSWORD_MSG.to_string(),
+            PASSWORD_TOO_WEAK => PASSWORD_TOO_WEAK_MSG.to_string(),
+            EMAIL_SEND_FAILED => EMAIL_SEND_FAILED_MSG.to_string(),
+            INVALID_VERIFICATION_CODE => INVALID_VERIFICATION_CODE_MSG.to_string(),
+            VERIFICATION_CODE_EXPIRED => VERIFICATION_CODE_EXPIRED_MSG.to_string(),
+            PRODUCT_NOT_OWNED_BY_MERCHANT => PRODUCT_NOT_OWNED_BY_MERCHANT_MSG.to_string(),
+            ORDER_STATUS_TRANSITION_ERROR => ORDER_STATUS_TRANSITION_ERROR_MSG.to_string(),
+            USER_STATUS_UPDATE_FAILED => USER_STATUS_UPDATE_FAILED_MSG.to_string(),
+            PERMISSION_DENIED => PERMISSION_DENIED_MSG.to_string(),
+            SETTING_UPDATE_FAILED => SETTING_UPDATE_FAILED_MSG.to_string(),
+            ACCOUNT_ALREADY_EXISTS => ACCOUNT_ALREADY_EXISTS_MSG.to_string(),
+            PASSWORD_RESET_FAILED => PASSWORD_RESET_FAILED_MSG.to_string(),
+            PROFILE_UPDATE_FAILED => PROFILE_UPDATE_FAILED_MSG.to_string(),
+            INVALID_PRODUCT_STATUS => INVALID_PRODUCT_STATUS_MSG.to_string(),
+            LOG_DELETION_FAILED => LOG_DELETION_FAILED_MSG.to_string(),
+            REPORT_GENERATION_FAILED => REPORT_GENERATION_FAILED_MSG.to_string(),
+            INVALID_EMAIL_FORMAT => INVALID_EMAIL_FORMAT_MSG.to_string(),
+            INVALID_PHONE_FORMAT => INVALID_PHONE_FORMAT_MSG.to_string(),
+            IMAGE_PROCESSING_FAILED => IMAGE_PROCESSING_FAILED_MSG.to_string(),
+            AVATAR_UPDATE_FAILED => AVATAR_UPDATE_FAILED_MSG.to_string(),
+            WEBSITE_INFO_UPDATE_FAILED => WEBSITE_INFO_UPDATE_FAILED_MSG.to_string(),
+            INVALID_DATE_RANGE => INVALID_DATE_RANGE_MSG.to_string(),
+            USER_ACCOUNT_NOT_FOUND => USER_ACCOUNT_NOT_FOUND_MSG.to_string(),
+            MERCHANT_ACCOUNT_NOT_FOUND => MERCHANT_ACCOUNT_NOT_FOUND_MSG.to_string(),
+            ADMIN_ACCOUNT_NOT_FOUND => ADMIN_ACCOUNT_NOT_FOUND_MSG.to_string(),
+            UNAUTHORIZED => UNAUTHORIZED_MSG.to_string(),
+            FORBIDDEN => FORBIDDEN_MSG.to_string(),
+            INVALID_CREDENTIALS => INVALID_CREDENTIALS_MSG.to_string(),
+            SESSION_EXPIRED => SESSION_EXPIRED_MSG.to_string(),
+            TOKEN_VALIDATION_FAILED => TOKEN_VALIDATION_FAILED_MSG.to_string(),
+            MISSING_CREDENTIALS => MISSING_CREDENTIALS_MSG.to_string(),
+            USER_NOT_AUTHENTICATED => USER_NOT_AUTHENTICATED_MSG.to_string(),
+            INVALID_SIGNATURE => INVALID_SIGNATURE_MSG.to_string(),
+            ACCOUNT_NOT_ACTIVATED => ACCOUNT_NOT_ACTIVATED_MSG.to_string(),
+            CSRF_TOKEN_VALIDATION_FAILED => CSRF_TOKEN_VALIDATION_FAILED_MSG.to_string(),
+            PAYMENT_FAILED => PAYMENT_FAILED_MSG.to_string(),
+            INVALID_PAYMENT_METHOD => INVALID_PAYMENT_METHOD_MSG.to_string(),
+            PAYMENT_GATEWAY_ERROR => PAYMENT_GATEWAY_ERROR_MSG.to_string(),
+            PAYMENT_CALLBACK_VERIFY_FAILED => PAYMENT_CALLBACK_VERIFY_FAILED_MSG.to_string(),
+            CURRENCY_MISMATCH => CURRENCY_MISMATCH_MSG.to_string(),
+            AMOUNT_MISMATCH => AMOUNT_MISMATCH_MSG.to_string(),
+            ORDER_ALREADY_PAID => ORDER_ALREADY_PAID_MSG.to_string(),
+            INVALID_WALLET_ADDRESS => INVALID_WALLET_ADDRESS_MSG.to_string(),
+            INSUFFICIENT_BALANCE => INSUFFICIENT_BALANCE_MSG.to_string(),
+            TRANSACTION_NOT_FOUND => TRANSACTION_NOT_FOUND_MSG.to_string(),
+            WITHDRAWAL_FAILED => WITHDRAWAL_FAILED_MSG.to_string(),
+            REFUND_FAILED => REFUND_FAILED_MSG.to_string(),
+            PAYMENT_METHOD_NOT_SUPPORTED => PAYMENT_METHOD_NOT_SUPPORTED_MSG.to_string(),
+            PAYMENT_AMOUNT_TOO_SMALL => PAYMENT_AMOUNT_TOO_SMALL_MSG.to_string(),
+            PAYMENT_TIMEOUT => PAYMENT_TIMEOUT_MSG.to_string(),
+            INCONSISTENT_PAYMENT_STATE => INCONSISTENT_PAYMENT_STATE_MSG.to_string(),
+            WALLET_CREATION_FAILED => WALLET_CREATION_FAILED_MSG.to_string(),
+            ADDRESS_GENERATION_FAILED => ADDRESS_GENERATION_FAILED_MSG.to_string(),
+            FILE_UPLOAD_FAILED => FILE_UPLOAD_FAILED_MSG.to_string(),
+            FILE_TOO_LARGE => FILE_TOO_LARGE_MSG.to_string(),
+            UNSUPPORTED_FILE_TYPE => UNSUPPORTED_FILE_TYPE_MSG.to_string(),
+            FILE_NOT_FOUND => FILE_NOT_FOUND_MSG.to_string(),
+            FILE_READ_ERROR => FILE_READ_ERROR_MSG.to_string(),
+            FILE_WRITE_ERROR => FILE_WRITE_ERROR_MSG.to_string(),
+            DIRECTORY_CREATION_FAILED => DIRECTORY_CREATION_FAILED_MSG.to_string(),
+            FILE_DELETE_FAILED => FILE_DELETE_FAILED_MSG.to_string(),
+            EXTERNAL_SERVICE_CALL_FAILED => EXTERNAL_SERVICE_CALL_FAILED_MSG.to_string(),
+            SMTP_CONNECT_FAILED => SMTP_CONNECT_FAILED_MSG.to_string(),
+            CREGIS_API_ERROR => CREGIS_API_ERROR_MSG.to_string(),
+            ANYCHAIN_API_ERROR => ANYCHAIN_API_ERROR_MSG.to_string(),
+            SMS_SERVICE_ERROR => SMS_SERVICE_ERROR_MSG.to_string(),
+            GEOLOCATION_SERVICE_ERROR => GEOLOCATION_SERVICE_ERROR_MSG.to_string(),
+            EXTERNAL_AUTH_ERROR => EXTERNAL_AUTH_ERROR_MSG.to_string(),
+            UNEXPECTED_ERROR => UNEXPECTED_ERROR_MSG.to_string(),
+            RATE_LIMIT_EXCEEDED => RATE_LIMIT_EXCEEDED_MSG.to_string(),
+            CSRF_TOKEN_INVALID => CSRF_TOKEN_INVALID_MSG.to_string(),
+            INVALID_REQUEST => INVALID_REQUEST_MSG.to_string(),
+            TIMEOUT_ERROR => TIMEOUT_ERROR_MSG.to_string(),
+            UNKNOWN_ROUTE => UNKNOWN_ROUTE_MSG.to_string(),
+            METHOD_NOT_ALLOWED => METHOD_NOT_ALLOWED_MSG.to_string(),
+            PAYLOAD_TOO_LARGE => PAYLOAD_TOO_LARGE_MSG.to_string(),
+            MEDIATYPE_NOT_SUPPORTED => MEDIATYPE_NOT_SUPPORTED_MSG.to_string(),
+            TOO_MANY_REQUESTS => TOO_MANY_REQUESTS_MSG.to_string(),
+            _ => UNKNOWN_ERROR_MSG.to_string(),
+        }
+    }
+
+    pub fn code(&self) -> i32 {
         match self {
             AppError::SystemError { code, .. } => *code,
             AppError::DataError { code, .. } => *code,
             AppError::BusinessError { code, .. } => *code,
             AppError::AuthError { code, .. } => *code,
             AppError::PaymentError { code, .. } => *code,
+            AppError::FileError { code, .. } => *code,
+            AppError::ExternalServiceError { code, .. } => *code,
             AppError::OtherError { code, .. } => *code,
-            AppError::SeaOrmError(_) => 2000, // Example code for SeaORM errors
-            AppError::ConfigError(_) => 1001, // Example code for config errors
-            AppError::RedisError(_) => 1002,  // Example code for Redis errors
-            AppError::BcryptError(_) => 1003, // Example code for Bcrypt errors
-            AppError::LettreError(_) => 1004, // Example code for Lettre errors
-            AppError::ReqwestError(_) => 1005, // Example code for Reqwest errors
-            AppError::AnyhowError(_) => 1000, // Example code for generic anyhow errors
-                                               // Assign codes for other error types
+            AppError::SeaOrmError(_) => DB_OPERATION_ERROR as i32,
+            AppError::ConfigError(_) => CONFIG_LOAD_ERROR as i32,
+            AppError::RedisError(_) => REDIS_OPERATION_ERROR as i32,
+            AppError::BcryptError(_) => SYSTEM_INTERNAL_ERROR as i32,
+            AppError::LettreError(_) => EMAIL_SEND_FAILED as i32,
+            AppError::ReqwestError(_) => EXTERNAL_SERVICE_CALL_FAILED as i32,
+            AppError::AnyhowError(_) => UNKNOWN_ERROR as i32,
+        }
+    }
+
+    pub fn message(&self) -> String {
+        match self {
+            AppError::SystemError { message, .. } => message.clone(),
+            AppError::DataError { message, .. } => message.clone(),
+            AppError::BusinessError { message, .. } => message.clone(),
+            AppError::AuthError { message, .. } => message.clone(),
+            AppError::PaymentError { message, .. } => message.clone(),
+            AppError::FileError { message, .. } => message.clone(),
+            AppError::ExternalServiceError { message, .. } => message.clone(),
+            AppError::OtherError { message, .. } => message.clone(),
+            AppError::SeaOrmError(e) => e.to_string(),
+            AppError::ConfigError(e) => e.to_string(),
+            AppError::RedisError(e) => e.to_string(),
+            AppError::BcryptError(e) => e.to_string(),
+            AppError::LettreError(e) => e.to_string(),
+            AppError::ReqwestError(e) => e.to_string(),
+            AppError::AnyhowError(e) => e.to_string(),
         }
     }
 
     pub fn status_code(&self) -> StatusCode {
         match self {
             AppError::AuthError { .. } => StatusCode::UNAUTHORIZED,
+            AppError::DataError { .. } => StatusCode::BAD_REQUEST,
+            AppError::BusinessError { .. } => StatusCode::BAD_REQUEST,
+            AppError::PaymentError { .. } => StatusCode::BAD_REQUEST,
+            AppError::FileError { .. } => StatusCode::BAD_REQUEST,
+            AppError::ExternalServiceError { .. } => StatusCode::INTERNAL_SERVER_ERROR,
             AppError::SystemError { .. }
+            | AppError::OtherError { .. }
+            | AppError::SeaOrmError(_)
             | AppError::ConfigError(_)
             | AppError::RedisError(_)
             | AppError::BcryptError(_)
             | AppError::LettreError(_)
             | AppError::ReqwestError(_)
             | AppError::AnyhowError(_) => StatusCode::INTERNAL_SERVER_ERROR,
-            AppError::DataError { .. } => StatusCode::BAD_REQUEST, // Data validation or not found
-            AppError::BusinessError { .. } | AppError::PaymentError { .. } => {
-                StatusCode::BAD_REQUEST
-            } // Business logic errors
-            AppError::OtherError { .. } => StatusCode::INTERNAL_SERVER_ERROR,
-            AppError::SeaOrmError(_) => StatusCode::INTERNAL_SERVER_ERROR,
         }
     }
 }
+
+// 定义系统统一的错误代码常量
+
+pub const SUCCESS: i32 = 0;
+pub const UNKNOWN_ERROR: i32 = 1000;
+pub const DATABASE_ERROR: i32 = 2000;
+pub const BUSINESS_ERROR: i32 = 3000;
+pub const AUTH_ERROR: i32 = 4000;
+
+// TODO: 根据项目需求细化错误代码

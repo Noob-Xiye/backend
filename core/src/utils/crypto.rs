@@ -1,9 +1,13 @@
-use bcrypt::{hash, verify, BcryptError};
+use bcrypt::{hash, verify, BcryptResult, DEFAULT_COST};
 
-pub fn hash_password(password: &str) -> Result<String, BcryptError> {
-    hash(password, 12) // 12 是成本因子，越高越慢但越安全
+/// 对密码进行 bcrypt 加密
+pub fn hash_password(password: &str) -> BcryptResult<String> {
+    hash(password, DEFAULT_COST)
 }
 
-pub fn verify_password(password: &str, hashed_password: &str) -> Result<bool, BcryptError> {
+/// 验证密码是否与哈希匹配
+pub fn verify_password(password: &str, hashed_password: &str) -> BcryptResult<bool> {
     verify(password, hashed_password)
 }
+
+// TODO: 考虑使用更安全的密码哈希算法或加盐策略

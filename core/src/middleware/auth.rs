@@ -3,6 +3,7 @@ use salvo::http::StatusError;
 use anyhow::Result;
 use crate::error::AppError;
 use async_trait::async_trait;
+use crate::core::error::{AppError, AppResult, error_list::{UNAUTHORIZED, FORBIDDEN}};
 
 // 定义您的用户标识符类型，例如，用户 ID 或会话 token
 #[derive(Clone, Debug)]
@@ -94,4 +95,57 @@ pub async fn check_permission(
         res.render(StatusError::forbidden().brief("Insufficient permissions"));
         ctrl.skip_rest();
     }
-} 
+}
+
+#[derive(Clone)]
+pub struct AuthMiddleware {
+    // TODO: 添加配置字段和权限验证逻辑
+}
+
+impl AuthMiddleware {
+    pub fn new() -> Self {
+        AuthMiddleware { /* TODO: 初始化配置 */ }
+    }
+}
+
+#[async_trait]
+impl Handler for AuthMiddleware {
+    async fn handle(
+        &self,
+        req: &mut Request,
+        depot: &mut Depot,
+        res: &mut Response,
+        ctrl: &mut FlowCtrl,
+    ) {
+        // TODO: 实现 token 解析和验证
+        let is_authenticated = false; // 占位符
+        let has_permission = false; // 占位符
+
+        if !is_authenticated {
+            let error = AppError::new(UNAUTHORIZED as i32);
+             res.render(salvo::http::Status::from(error.status_code()).with_body(serde_json::to_string(&crate::core::model::response::UnifiedResponse::<()>{
+                 code: error.code(),
+                 msg: error.message(),
+                 data: None,
+             }).unwrap()));
+            ctrl.skip_rest();
+            return;
+        }
+
+        // TODO: 如果需要权限验证，实现权限检查
+        if !has_permission {
+             let error = AppError::new(FORBIDDEN as i32);
+              res.render(salvo::http::Status::from(error.status_code()).with_body(serde_json::to_string(&crate::core::model::response::UnifiedResponse::<()>{
+                  code: error.code(),
+                  msg: error.message(),
+                  data: None,
+              }).unwrap()));
+             ctrl.skip_rest();
+             return;
+         }
+
+        ctrl.call_next(req, depot, res, ctrl).await;
+    }
+}
+
+// TODO: 添加 token 生成和验证的辅助函数 
