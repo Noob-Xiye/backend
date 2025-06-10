@@ -1,6 +1,105 @@
 # Core 模块
 
-Core 模块是系统的核心基础库，提供了其他所有模块所需的公共功能和数据结构。
+## 项目整体结构
+```
+backend/
+├── admin/          # 后台管理模块
+├── bin/            # 项目入口
+├── core/           # 核心基础库
+│   ├── src/
+│   │   ├── config/         # 配置管理
+│   │   │   ├── mod.rs
+│   │   │   └── config.rs   # 配置加载
+│   │   ├── constants/      # 常量定义
+│   │   │   ├── mod.rs
+│   │   │   ├── depot_key.rs
+|   |   |   ├── http_header.rs
+│   │   │   └── error_code.rs
+│   │   ├── entities/       # 数据库实体
+│   │   │   ├── mod.rs
+│   │   │   ├── admin.rs
+│   │   │   ├── customer.rs
+│   │   │   ├── merchant.rs
+│   │   │   ├── order.rs
+│   │   │   ├── payment_record.rs
+│   │   │   ├── permission.rs
+│   │   │   ├── product.rs
+│   │   │   ├── web_profile.rs
+│   │   │   ├── logging.rs
+│   │   │   ├── report.rs
+│   │   │   └──、、、
+│   │   ├── error/          # 错误处理机制
+│   │   │   ├── mod.rs
+│   │   │   └── app_error.rs
+│   │   ├── middleware/     # 中间件组件
+│   │   │   ├── mod.rs
+│   │   │   ├── auth.rs     # 简易鉴权中间件
+│   │   │   ├── cors.rs     # CORS
+│   │   │   ├── csrf.rs     # CSRF
+│   │   │   ├── logging.rs  # 日志中间件
+│   │   │   ├── request_id.rs # 请求追踪
+│   │   │   └── session.rs  # 会话管理
+│   │   ├── models/         # 数据模型
+│   │   │   ├── mod.rs
+│   │   │   ├── response.rs
+│   │   │   └──
+│   │   ├── utils/          # 工具函数
+│   │   │   ├── mod.rs
+│   │   │   ├── pwd_hash.rs   #密码加密
+│   │   │   ├── database.rs #数据库连接池
+│   │   │   ├── email.rs    #邮件验证码
+│   │   │   ├── get_request_id.rs   #获取请求ID
+│   │   │   ├── redis.rs    #redis连接池
+│   │   │   └── snowflake.rs  #生成雪花ID
+│   │   └── lib.rs          # 模块入口
+│   └── Cargo.toml          # 依赖配置
+├── customer/       # 客户前台模块
+├── merchant/       # 商家前台模块
+├── open_api/       # API 文档和路由整合
+├── payment/        # 支付处理模块
+├── config.toml     # 配置文件
+└── Cargo.toml      # 项目依赖配置
+```
+
+## Core 模块说明
+核心基础设施模块，提供项目的基础功能和通用组件。
+
+### 主要功能
+- 数据库实体和ORM操作
+  - 用户实体（管理员、商家、客户）
+  - 业务实体（订单、商品、支付记录）
+  - 系统实体（日志、权限、配置）
+- 中间件组件
+  - 认证授权
+  - 跨域处理
+  - CSRF防护
+  - 日志记录
+  - 会话管理
+  - 请求追踪
+- 工具函数
+  - 加密解密
+  - 数据库操作
+  - 邮件发送
+  - Redis缓存
+  - ID生成器
+- 错误处理机制
+  - 统一错误码
+  - 错误响应格式
+  - 异常处理
+- 配置管理
+  - 系统配置
+  - 应用设置
+  - 常量定义
+
+### 依赖说明
+- sea-orm: 数据库 ORM
+- redis: Redis 客户端
+- serde: 序列化/反序列化
+- tokio: 异步运行时
+- tracing: 日志追踪
+- lettre: 邮件发送
+- snowflake: 唯一标识符
+- Argon2：密码加密
 
 ## 概述与依赖
 

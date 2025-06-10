@@ -1,18 +1,70 @@
-# Open_api 模块
+# Open API 模块
 
-该模块负责集成各业务模块的路由，并生成 OpenAPI (Swagger) 文档。
+## 项目整体结构
+```
+backend/
+├── admin/          # 后台管理模块
+├── bin/            # 项目入口
+├── core/           # 核心基础库
+├── customer/       # 客户前台模块
+├── merchant/       # 商家前台模块
+├── open_api/       # API 文档和路由整合
+│   ├── src/
+│   │   ├── routers/
+│   │   │   ├── admin_router.rs    # 管理员路由
+│   │   │   ├── customer_router.rs # 客户路由
+│   │   │   └── merchant_router.rs # 商家路由
+│   │   ├── handlers
+│   │   │   ├── admin_auth_handler.rs  # 处理管理员的公开路由和需要登陆的路由
+│   │   └── lib.rs            # 模块入口
+│   └── Cargo.toml            # 依赖配置
+├── payment/        # 支付处理模块
+├── config.toml     # 配置文件
+└── Cargo.toml      # 项目依赖配置
+```
 
-## open_api模块 概述与依赖
+## Open API 模块说明
+API网关层模块，负责路由整合和API文档生成。
 
-Open-api 模块负责集成各业务模块的路由，并生成 OpenAPI (Swagger) 文档。它依赖于 `admin`, `customer`, `merchant`, `payment` 模块的路由定义，并依赖于 `core` 模块提供的中间件。
+### 主要功能
+- 路由整合
+  - 统一路由管理
+  - 中间件挂载
+  - 请求转发
+  - 路由分组
+- OpenAPI文档
+  - 文档生成
+  - Swagger UI集成
+  - API版本管理
+  - 接口测试
+- 健康检查
+  - 服务状态监控
+  - 依赖检查
+  - 性能指标
+  - 服务发现
 
-## Swagger特性
+### 依赖说明
+- salvo: Web框架
+- utoipa: OpenAPI文档生成
+- serde: 序列化/反序列化
+- tokio: 异步运行时
+- tracing: 日志追踪
+- swagger-ui: API文档UI
+- ./core/src/entities: 数据库实体
+- ./core/src/models: 数据模型
+- ./core/src/middleware: 中间件
+- ./core/src/utils: 工具函数
+- ./admin/src/account: 管理管账号管理
+- ./admin/src/logging: 日志管理
+- ./admin/src/web: 网站管理
+- ./admin/src/customer: 客户账号管理
+- ./admin/src/merchant: 商家账号管理
+- ./admin/src/monitor: 网站报表
+- ./admin/src/product: 商品管理
+- ./customer/src/account: 客户账号管理
+- ./customer/src/order: 客户账号订单管理
+- ./merchant/src/account: 商家账号管理
+- ./merchant/src/payment: 商家账号收款记录
+- ./merchant/src/product: 商家账号商品管理
+- ./merchant/src/monitor: 商家报表
 
-- 基于Salvo-oapi实现的OpenAPI接口文档。该模块汇集了各个业务模块的路由，并在此基础上生成和挂载Swagger UI。
-  - 模块内包含各业务模块的路由定义：
-    - admin模块的Router [admin_router.rs](./src/admin_router.rs) (包含公开和需要鉴权页面路由)
-    - customer模块的Router [customer_router.rs](./src/customer_router.rs) (包含公开和需要鉴权页面路由)
-    - merchant模块的Router [merchant_router.rs](./src/merchant_router.rs) (包含公开和需要鉴权页面路由)
-  - 将模块Router合并的总Router [lib.rs](./src/lib.rs)
-  - 总Router上挂载了 core 模块内的常用中间件，如会话管理、日志服务、请求追踪、跨域、鉴权等。
-  - 最后在总Router上挂载基于Salvo-oapi实现的Swagger.
